@@ -6,7 +6,8 @@ const defaultPayload = {
   "mustFanout": true,
 }
 
-yargs.command('$0', 'Sign a JWT', args => {
+yargs.scriptName("stream-sea-jwt")
+  .command('$0', 'Sign a JWT', args => {
   args.option('jwtSecret', {
     alias: 's',
     type: 'string',
@@ -19,7 +20,7 @@ yargs.command('$0', 'Sign a JWT', args => {
   })
   .demandOption('jwtSecret')
 }, (argv) => {
-  const payload = argv.payload || defaultPayload
+  const payload = argv.payload ? JSON.parse(argv.payload) : defaultPayload
   const jwtSerialized = jwt.sign(payload, argv.jwtSecret)
   console.log(jwtSerialized)
 })
