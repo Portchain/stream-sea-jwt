@@ -15,15 +15,32 @@ yargs.scriptName("stream-sea-jwt")
       type: 'string',
       describe: 'JWT secret'
     })
+    .option('jwtPrivateKey', {
+      alias: 'k',
+      type: 'string',
+      describe: 'JWT private key'
+    })
     .option('payload', {
       alias: 'p',
       type: 'string',
       describe: 'payload'
     })
-    .demandOption('jwtSecret')
   }, (argv) => {
     const payload = argv.payload ? JSON.parse(argv.payload) : defaultPayload
-    const jwtSerialized = jwt.sign(payload, argv.jwtSecret)
+    
+    let jwtSerialized
+    if (argv.jwtSecret && argv.jwtPrivateKey){
+      console.error('Cannot use both JWT secret and JWT private key. Choose one')
+      process.exit(1)
+    } else if (argv.jwtSecret){
+      jwtSerialized = jwt.sign(payload, argv.jwtSecret)
+    } else if (argv.jwtPrivateKey){
+      jwtSerialized = jwt.sign(payload, argv.jwtPrivateKey, { algorithm: 'RS256' })
+    } else {
+      console.error('Must provide either JWT secret or JWT private key')
+      process.exit(1)
+    }
+
     console.log(jwtSerialized)
   })
   .command('generate', 'Generate a keypair', args => {
