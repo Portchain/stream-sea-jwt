@@ -35,7 +35,7 @@ yargs.scriptName("stream-sea-jwt")
     } else if (argv.jwtSecret){
       jwtSerialized = jwt.sign(payload, argv.jwtSecret)
     } else if (argv.jwtPrivateKey){
-      jwtSerialized = jwt.sign(payload, argv.jwtPrivateKey, { algorithm: 'RS256' })
+      jwtSerialized = jwt.sign(payload, argv.jwtPrivateKey, { algorithm: 'RS512' })
     } else {
       console.error('Must provide either JWT secret or JWT private key')
       process.exit(1)
